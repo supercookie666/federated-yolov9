@@ -1,0 +1,57 @@
+#!/bin/bash
+#SBATCH --job-name=fed_client
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=chander92811@gmail.com
+#SBATCH --account=GOV113038
+#SBATCH --partition=gp1d
+
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=1       # 總共 4 tasks → 4 個 client
+#SBATCH --gpus-per-node=1
+#SBATCH --cpus-per-task=4
+#SBATCH --gres-flags=enforce-binding
+#SBATCH --output=z_fed_client.out
+#SBATCH --error=z_fed_client.out
+
+
+# 路徑
+SIF=/home/chander92811/yolo9t2_ngc2306_20241226.sif
+
+# 參數（給子腳本用）
+NumRounds=3
+EPOCHS=50
+BATCH=16
+WORKERS=4
+export EPOCHS BATCH WORKERS
+
+echo "==============================="
+
+cd /home/chander92811/yolov9
+
+for ROUND in $(seq 0 $((NumRounds-1))); do
+  echo "===== Round ${ROUND} START ====="
+
+  # 1) 並行 4 個 client（關鍵：每個 srun 後面要有 &）
+  for CLIENT in 0 1 2 3; do
+    srun --exclusive -N 1 --ntasks=1 --gpus-per-task=1 --cpus-per-task=4 \
+         --kill-on-bad-exit=1 \
+         singularity exec --nv "$SIF" \
+         bash run_client_parallel.sh "${CLIENT}" "${ROUND}" &
+  done
+
+  # 等待四個 client 都完成
+  wait
+  echo "→ Round ${ROUND} local training done."
+
+  # 2) 聚合（只要一次；要不要 GPU 看你的 aggregate 實作）
+  echo "→ Aggregating weights for Round ${ROUND}…"
+  srun --exclusive -N 1 --ntasks=1 --gpus-per-task=1 --cpus-per-task=2 \
+       --kill-on-bad-exit=1 \
+       singularity exec --nv "$SIF" \
+       bash run_aggregate.sh "${ROUND}"
+
+  echo "===== Round ${ROUND} COMPLETE → global_round_$((ROUND+1)).pt ====="
+done
+
+echo "=== All ${NumRounds} Rounds Finished ==="
+
