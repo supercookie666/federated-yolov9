@@ -1,0 +1,1 @@
+client模型訓練過程中，各client每一round的模型皆存於此
