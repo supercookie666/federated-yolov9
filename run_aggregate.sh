@@ -18,7 +18,7 @@ NEXT_ROUND=$((ROUND + 1))
 
 
 # 準備四個 client 的權重路徑
-cd /home/chander92811/yolov9
+cd /home/your_account/yolov9
 INPUT_MODELS=(
   "fed_client_weights/client0_r${ROUND}/weights/best.pt"
   "fed_client_weights/client1_r${ROUND}/weights/best.pt"
