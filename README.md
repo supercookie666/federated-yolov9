@@ -27,7 +27,6 @@
 
 ```bash
 # 建立資料夾
-mkdir -p datasets/kitti
 cd datasets/kitti
 
 # 下載 KITTI 官方影像與標註檔（需先到官網註冊並同意協議）
