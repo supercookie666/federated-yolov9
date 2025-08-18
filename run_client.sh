@@ -45,7 +45,7 @@ EPOCHS=50
 BATCH=32
 WORKERS=8
 
-cd /home/chander92811/yolov9
+cd /home/your_account/yolov9
 
 
 #權重參數設定
