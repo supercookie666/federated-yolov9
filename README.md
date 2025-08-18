@@ -38,6 +38,9 @@ unzip images.zip -d images
 unzip labels.zip -d labels
 
 ```
+
+---
+
 ## 🚀 執行方法（How to Run）
 
 > 本專案在 **NCHC / TWCC HPC** 上運行，透過 **Slurm** 排程與 **Singularity**環境執行。下列為兩種常見操作模式的**步驟說明**；對應指令已存放於專案中，請依你的資源（節點/GPU/partition）調整後提交。
@@ -71,11 +74,14 @@ unzip labels.zip -d labels
 3. **資源配置**：在 Slurm 腳本中設定節點數、每節點 GPU 數、CPU/記憶體等
 4. **提交訓練**：以 parallel（多節點單GPU平行）(fed_parallel.sb)方式啟動平行訓練。
 5. **查看結果**：訓練權重（baseline）輸出至 `fed_client_weights/`（或你的 runs 路徑）；使用驗證腳本在 `val` 上測試，輸出至 `fed_val_client/`。
+
 ---
 
 ### 備註
 - **環境**：TWCC 建議使用 **Singularity** 確保一致性；本地測試可改用 **Conda**。
 - **路徑一致性**：確保 YAML 中的資料路徑與實際目錄一致（`central` / `client0~3` / `val`）。
+
+---
 
 ## 👀 結果與監控
 
@@ -93,6 +99,7 @@ unzip labels.zip -d labels
   - 快速肉眼檢查：框與遮罩是否合理、是否有明顯漏檢/誤檢。
 - **訓練日誌（Slurm）**：`slurm-*.out`  
   - 確認是否有 OOM、Dataloader 卡住、權重存檔失敗等訊息。
+
 ---
 
 ### 2) 平行式訓練（Federated：Clients 並行 → Server 聚合）
@@ -104,6 +111,7 @@ unzip labels.zip -d labels
   - 訓練完成後的全域模型（如 `best.pt`），用於最終評估與部署。
 - **驗證結果**：`fed_val_client/`（與/或 `fed_val_central/`）  
   - 觀察每輪或最終的：`mAP@0.5`、`mAP@0.5:0.95`、Precision、Recall。 
+
 ---
 
 
