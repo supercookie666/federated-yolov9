@@ -11,7 +11,7 @@
 本專案運行於 **國網中心 (NCHC) TWCC HPC** 叢集環境，使用 **Slurm** 作業排程系統與 **Singularity** 容器管理工具。  
 - **Slurm**：負責跨節點、跨 GPU 的分配與調度。  
 - **Singularity**：用於建立獨立、可攜帶的容器環境，確保實驗的可重現性。  
-- 詳細 TWCC 使用方式，請參考官方文件 👉 [TWCC 使用手冊](https://man.twcc.ai)  
+- 詳細 TWCC 使用方式，請參考官方文件 👉 [TWCC 使用手冊]([https://man.twcc.ai](https://man.twcc.ai/@twccdocs/doc-twnia2-main-zh/https%3A%2F%2Fman.twcc.ai%2F%40twccdocs%2Ftwnia2-overview-zh))  
 
 此環境支援 **多節點多 GPU** 的聯邦學習實驗，適合大規模分散式訓練。  
 
