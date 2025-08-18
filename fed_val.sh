@@ -3,7 +3,7 @@
 # +
 ### 參數設定區 ###
 ## 工作目錄
-WORKDIR=/home/chander92811/yolov9 ## 更換為你的yolov9 目錄
+WORKDIR=/home/your_account/yolov9 ## 更換為你的yolov9 目錄
 cd $WORKDIR
 
 
@@ -30,7 +30,7 @@ echo "==================="
 echo "Activated Conda Environment:"
 echo "==================="
 python -c "import sys; print('\n'.join(sys.path))"
-wandb login b0873e135aede1107b9524e83fbd2d526ac60861
+wandb login 
 python -c 'import wandb'
 python -c 'import torch; print(torch.__version__)'
 echo "==================="
