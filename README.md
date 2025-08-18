@@ -54,7 +54,7 @@ unzip labels.zip -d labels
 1. **確認環境**：已於 TWCC 建好容器/環境（Singularity 或 Conda），可使用 GPU。
 2. **資料設定**：`data/kitti_central.yaml` 指向 `datasets/kitti/central/`（影像/標註）。
 3. **資源配置**：在 Slurm 腳本中設定節點數、每節點 GPU 數、CPU/記憶體等（參考 `scripts/` 中的集中式訓練腳本）。
-4. **提交訓練**：以 DDP（多節點多 GPU）方式啟動集中式訓練。
+4. **提交訓練**：以 DDP（多節點多 GPU）(fed_client.sb)方式啟動集中式訓練。
 5. **查看結果**：訓練權重（baseline）輸出至 `fed_central_weights/`（或你的 runs 路徑）；使用驗證腳本在 `val` 上測試，輸出至 `fed_val_central/`。
 
 ---
