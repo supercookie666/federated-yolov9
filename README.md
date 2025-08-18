@@ -85,7 +85,6 @@ unzip labels.zip -d labels
 ---
 
 ### 備註
-- **Slurm 腳本**：各模式對應的提交腳本已放在 `scripts/` 內；請依叢集實際資源（`--nodes`、`--gpus-per-node`、partition/account 等）調整。
 - **環境**：TWCC 建議使用 **Singularity** 確保一致性；本地測試可改用 **Conda**。
 - **路徑一致性**：確保 YAML 中的資料路徑與實際目錄一致（`central` / `client0~3` / `val`）。
 
