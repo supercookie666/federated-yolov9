@@ -37,3 +37,53 @@ wget http://www.cvlibs.net/download.php?file=data_object_label_2.zip -O labels.z
 unzip images.zip -d images
 unzip labels.zip -d labels
   
+## 🚀 執行方法（How to Run）
+
+> 本專案在 **NCHC / TWCC HPC** 上運行，透過 **Slurm** 排程與 **Singularity**（或 Conda）環境執行。下列為兩種常見操作模式的**步驟說明**；對應指令已封裝於 `scripts/` 內的腳本中，請依你的資源（節點/GPU/partition）調整後提交。
+
+---
+
+### A) 多 GPU 跨節點加速運算（集中式 DDP 基準線）
+
+![集中式 DDP 工作流程](figure/central_ddp.png)
+
+**目的**：使用 `central`（client0–3 合併）資料集進行集中式訓練，作為與聯邦式訓練比較的 baseline。
+
+**步驟**
+1. **確認環境**：已於 TWCC 建好容器/環境（Singularity 或 Conda），可使用 GPU。
+2. **資料設定**：`data/kitti_central.yaml` 指向 `datasets/kitti/central/`（影像/標註）。
+3. **資源配置**：在 Slurm 腳本中設定節點數、每節點 GPU 數、CPU/記憶體等（參考 `scripts/` 中的集中式訓練腳本）。
+4. **提交訓練**：以 DDP（多節點多 GPU）方式啟動集中式訓練。
+5. **查看結果**：訓練權重（baseline）輸出至 `fed_central_weights/`（或你的 runs 路徑）；使用驗證腳本在 `val` 上測試，輸出至 `fed_val_central/`。
+
+---
+
+### B) 平行同步運算（Federated Learning：Clients 並行 → Server 聚合）
+
+![Federated 平行同步流程](figure/fl_parallel.png)
+
+**目的**：模擬真實分散式情境；clients 於各自資料上**並行訓練**，完畢後由 server **同步聚合**（FedAvg），反覆多輪直到收斂。
+
+**步驟**
+1. **建立/確認輸出目錄**：`fed_client_weights/`、`global_round_weights/`、`fed_final_weights/`、`fed_val_client/`（供各階段輸出）。
+2. **Round 1：Clients 並行訓練**  
+   - 為 client0–3 分別提交訓練作業（各自讀取 `data/kitti_client{i}.yaml`）。  
+   - 完成後於 `fed_client_weights/round_1/` 產生各 client 的權重。
+3. **Round 1：Server 聚合**  
+   - 以聚合腳本執行 FedAvg，產生 `global_round_weights/round_1/` 的全域權重。
+4. **廣播新權重**  
+   - 將 Round 1 的全域權重下發至 client0–3 作為 Round 2 的初始化。
+5. **Round 2 → N：重複 2–4**  
+   - 直到達成設定的回合數或收斂條件。
+6. **最終輸出**  
+   - 於 `fed_final_weights/` 取得最終全域模型（例如 `best.pt`）。
+7. **評估與可視化**  
+   - 使用驗證腳本在 `val` 上評估全域與各 client 的模型；結果輸出到 `fed_val_client/`（與/或 `fed_val_central/`）。  
+   - 可將指標（mAP、單輪耗時、每輪傳輸量等）匯出至 `figure/` 供簡報使用。
+
+---
+
+### 備註
+- **Slurm 腳本**：各模式對應的提交腳本已放在 `scripts/` 內；請依叢集實際資源（`--nodes`、`--gpus-per-node`、partition/account 等）調整。
+- **環境**：TWCC 建議使用 **Singularity** 確保一致性；本地測試可改用 **Conda**。
+- **路徑一致性**：確保 YAML 中的資料路徑與實際目錄一致（`central` / `client0~3` / `val`）。
