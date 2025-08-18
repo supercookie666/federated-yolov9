@@ -77,6 +77,36 @@ unzip labels.zip -d labels
 - **環境**：TWCC 建議使用 **Singularity** 確保一致性；本地測試可改用 **Conda**。
 - **路徑一致性**：確保 YAML 中的資料路徑與實際目錄一致（`central` / `client0~3` / `val`）。
 
+## 👀 結果與監控
+
+本節說明訓練完成後「要看哪裡、看什麼」，以及訓練過程中如何確認狀態是否正常。
+
+---
+
+### 1) 集中式訓練（Central / DDP）
+- **模型權重**：`fed_central_weights/`  
+  - 觀察是否產生 `best.pt` / `last.pt` 等權重檔。
+- **驗證結果**：`fed_val_central/`  
+  - 主要指標：`mAP@0.5`、`mAP@0.5:0.95`、Precision、Recall。  
+  - 建議輸出：混淆矩陣、PR 曲線、mAP 收斂曲線。
+- **偵測輸出**：`runs/detect/exp*/`  
+  - 快速肉眼檢查：框與遮罩是否合理、是否有明顯漏檢/誤檢。
+- **訓練日誌（Slurm）**：`slurm-*.out`  
+  - 確認是否有 OOM、Dataloader 卡住、權重存檔失敗等訊息。
+---
+
+### 2) 聯邦式訓練（Federated：Clients 並行 → Server 聚合）
+- **Clients 本地權重**：`fed_client_weights/round_k/`  
+  - 每輪 (k) 完成後應有 `client0.pt`…`client3.pt` 等檔案。
+- **全域聚合權重**：`global_round_weights/round_k/`  
+  - Server 聚合產出的 `global.pt`（或你在腳本中設定的檔名）。
+- **最終模型**：`fed_final_weights/`  
+  - 訓練完成後的全域模型（如 `best.pt`），用於最終評估與部署。
+- **驗證結果**：`fed_val_client/`（與/或 `fed_val_central/`）  
+  - 觀察每輪或最終的：`mAP@0.5`、`mAP@0.5:0.95`、Precision、Recall。 
+---
+
+
 
   
 
