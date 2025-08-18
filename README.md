@@ -36,7 +36,8 @@ wget http://www.cvlibs.net/download.php?file=data_object_label_2.zip -O labels.z
 # 解壓縮
 unzip images.zip -d images
 unzip labels.zip -d labels
-  
+
+```
 ## 🚀 執行方法（How to Run）
 
 > 本專案在 **NCHC / TWCC HPC** 上運行，透過 **Slurm** 排程與 **Singularity**（或 Conda）環境執行。下列為兩種常見操作模式的**步驟說明**；對應指令已封裝於 `scripts/` 內的腳本中，請依你的資源（節點/GPU/partition）調整後提交。
@@ -87,3 +88,7 @@ unzip labels.zip -d labels
 - **Slurm 腳本**：各模式對應的提交腳本已放在 `scripts/` 內；請依叢集實際資源（`--nodes`、`--gpus-per-node`、partition/account 等）調整。
 - **環境**：TWCC 建議使用 **Singularity** 確保一致性；本地測試可改用 **Conda**。
 - **路徑一致性**：確保 YAML 中的資料路徑與實際目錄一致（`central` / `client0~3` / `val`）。
+
+
+  
+
