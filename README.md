@@ -17,16 +17,24 @@
 
 ---
 
-## 📊 資料準備  
+## 📂 資料集說明
 
-使用資料集：**KITTI Vision Benchmark Suite - 2D Object Detection**  
-- 原始資料包含 **Car、Van、Truck、Pedestrian、Cyclist、Tram、Misc** 等類別。  
-- 本研究將資料平均拆分為 **client0 ~ client3** 四個訓練子集，並額外保留 **val** 作為驗證集。  
-- **central** 資料集則由 **client0-3** 合併而成，用於集中式訓練與對照實驗。  
+### 下載 KITTI 資料集
+本專案使用 **KITTI Vision Benchmark Suite - 2D Object Detection**  
+官方網址：[KITTI Dataset](https://www.cvlibs.net/datasets/kitti/eval_object.php?obj_benchmark=2d)
 
-### 🔗 取得專案與資料  
+請先下載 **images** 與 **labels**（YOLO 格式或經轉換後的標註檔）。
 
-1. **Clone 本專案**  
-   ```bash
-   git clone https://github.com/<你的帳號>/<你的repo名稱>.git
-   cd <你的repo名稱>
+```bash
+# 建立資料夾
+mkdir -p datasets/kitti
+cd datasets/kitti
+
+# 下載 KITTI 官方影像與標註檔（需先到官網註冊並同意協議）
+wget http://www.cvlibs.net/download.php?file=data_object_image_2.zip -O images.zip
+wget http://www.cvlibs.net/download.php?file=data_object_label_2.zip -O labels.zip
+
+# 解壓縮
+unzip images.zip -d images
+unzip labels.zip -d labels
+  
