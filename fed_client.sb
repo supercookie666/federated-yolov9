@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=fed_client
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=chander92811@gmail.com
-#SBATCH --account=GOV113038
-#SBATCH --partition=gp1d
+#SBATCH --mail-user=your_mail
+#SBATCH --account=your account
+#SBATCH --partition=gp1d            
 
 #SBATCH --nodes=2                   # 2 個節點
 #SBATCH --gres=gpu:2                # 每task 2 張 GPU
@@ -15,7 +15,7 @@
 #module load singularity
 
 # 參數
-SIF=/home/chander92811/yolo9t2_ngc2306_20241226.sif 
+SIF=/home/your_account/.sif 
 SINGULARITY="singularity run --nv $SIF"
 
 # defind master
@@ -27,6 +27,7 @@ nvidia-smi --list-gpus
 NGPU=$(nvidia-smi -L | wc -l) # $SLURM_GPUS_ON_NODE
 export NGPU
 
+#參數
 NumRounds=3
 EPOCHS=50
 BATCH=32
@@ -34,7 +35,7 @@ WORKERS=8
 
 echo "==============================="
 
-cd /home/chander92811/yolov9
+cd /home/your account/yolov9
 
 for ROUND in $(seq 0 $((NumRounds-1))); do
   echo "===== Round ${ROUND} START ====="
