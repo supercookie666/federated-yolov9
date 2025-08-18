@@ -44,18 +44,18 @@ unzip labels.zip -d labels
 
 ---
 
-### A) 多 GPU 跨節點加速運算（集中式 DDP 基準線）
+### A) 多 GPU 跨節點加速運算
 
 ![集中式 DDP 工作流程](figure/central_ddp.png)
 
-**目的**：使用 `central`（client0–3 合併）資料集進行集中式訓練，作為與聯邦式訓練比較的 baseline。
+**目的**：使用 `client`（client0–3 合併）資料集進行加速訓練，作為與平行式訓練比較的 baseline。
 
 **步驟**
 1. **建立/確認輸出目錄**：已於 TWCC HFS建好環境（Singularity），可使用 GPU。`fed_client_weights/`、`global_round_weights/`、`fed_final_weights/`、`fed_val_client/`（供各階段輸出）。
-2. **資料設定**：`data/kitti_central.yaml` 指向 `datasets/kitti/central/`（影像/標註）。
+2. **資料設定**：`data/kitti_client.yaml` 指向 `datasets/kitti/client/`（影像/標註）。
 3. **資源配置**：在 Slurm 腳本中設定節點數、每節點 GPU 數、CPU/記憶體等
 4. **提交訓練**：以 DDP（多節點多 GPU）(fed_client.sb)方式啟動集中式訓練。
-5. **查看結果**：訓練權重（baseline）輸出至 `fed_central_weights/`（或你的 runs 路徑）；使用驗證腳本在 `val` 上測試，輸出至 `fed_val_central/`。
+5. **查看結果**：訓練權重（baseline）輸出至 `fed_client_weights/`（或你的 runs 路徑）；使用驗證腳本在 `val` 上測試，輸出至 `fed_val_client/`。
 
 ---
 
@@ -67,10 +67,10 @@ unzip labels.zip -d labels
 
 **步驟**
 1. **建立/確認輸出目錄**：已於 TWCC HFS建好環境（Singularity），可使用 GPU。`fed_client_weights/`、`global_round_weights/`、`fed_final_weights/`、`fed_val_client/`（供各階段輸出）。
-2. **資料設定**：`data/kitti_central.yaml` 指向 `datasets/kitti/central/`（影像/標註）。
+2. **資料設定**：`data/kitti_client.yaml` 指向 `datasets/kitti/client/`（影像/標註）。
 3. **資源配置**：在 Slurm 腳本中設定節點數、每節點 GPU 數、CPU/記憶體等
 4. **提交訓練**：以 parallel（多節點單GPU平行）(fed_parallel.sb)方式啟動平行訓練。
-5. **查看結果**：訓練權重（baseline）輸出至 `fed_central_weights/`（或你的 runs 路徑）；使用驗證腳本在 `val` 上測試，輸出至 `fed_val_central/`。
+5. **查看結果**：訓練權重（baseline）輸出至 `fed_client_weights/`（或你的 runs 路徑）；使用驗證腳本在 `val` 上測試，輸出至 `fed_val_client/`。
 ---
 
 ### 備註
@@ -83,8 +83,8 @@ unzip labels.zip -d labels
 
 ---
 
-### 1) 集中式訓練（Central / DDP）
-- **模型權重**：`fed_central_weights/`  
+### 1) 線性式訓練（Central / DDP）
+- **模型權重**：`fed_client_weights/`  
   - 觀察是否產生 `best.pt` / `last.pt` 等權重檔。
 - **驗證結果**：`fed_val_central/`  
   - 主要指標：`mAP@0.5`、`mAP@0.5:0.95`、Precision、Recall。  
@@ -95,7 +95,7 @@ unzip labels.zip -d labels
   - 確認是否有 OOM、Dataloader 卡住、權重存檔失敗等訊息。
 ---
 
-### 2) 聯邦式訓練（Federated：Clients 並行 → Server 聚合）
+### 2) 平行式訓練（Federated：Clients 並行 → Server 聚合）
 - **Clients 本地權重**：`fed_client_weights/round_k/`  
   - 每輪 (k) 完成後應有 `client0.pt`…`client3.pt` 等檔案。
 - **全域聚合權重**：`global_round_weights/round_k/`  
