@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=fed_client
 #SBATCH --mail-type=ALL
-#SBATCH --mail-user=chander92811@gmail.com
-#SBATCH --account=GOV113038
+#SBATCH --mail-user=your_mail
+#SBATCH --account=your_account
 #SBATCH --partition=gp1d
 
 #SBATCH --nodes=4
@@ -15,7 +15,7 @@
 
 
 # 路徑
-SIF=/home/chander92811/yolo9t2_ngc2306_20241226.sif
+SIF=/home/your_account/.sif
 
 # 參數（給子腳本用）
 NumRounds=3
@@ -26,7 +26,7 @@ export EPOCHS BATCH WORKERS
 
 echo "==============================="
 
-cd /home/chander92811/yolov9
+cd /home/your_account/yolov9
 
 for ROUND in $(seq 0 $((NumRounds-1))); do
   echo "===== Round ${ROUND} START ====="
