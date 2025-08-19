@@ -40,7 +40,7 @@ cd /home/your account/yolov9
 for ROUND in $(seq 0 $((NumRounds-1))); do
   echo "===== Round ${ROUND} START ====="
   
-  # 1) 並行 4 個 client：宿主機用 srun 叫容器內的 run_client.sh
+  # 1) 線性 4 個 client：宿主機用 srun 叫容器內的 run_client.sh
   for CLIENT in 0 1 2 3; do
     cmd="srun --gres=gpu:$NGPU --mpi=pmix \
               $SINGULARITY bash run_client.sh ${CLIENT} ${ROUND}"
