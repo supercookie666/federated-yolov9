@@ -1,8 +1,8 @@
 # Federated YOLOv9 on NCHC HPC
 
-實作在 NCHC/TWCC HPC 上的 **聯邦式學習 (Federated Learning)** 版 YOLOv9：支援多節點多 GPU、Slurm 排程、Singularity 容器，以及集中式/聯邦式訓練與評估。
+實作在 NCHC/TWCC HPC 上的 **聯邦式學習 (Federated Learning)** 版 YOLOv9：支援多節點多 GPU、Slurm 排程、Singularity 容器，以及線性跨節點/同步平行之聯邦式訓練與評估。
 
-> Based on YOLOv9. Federated extensions and HPC scripts by QQ.
+> Based on YOLOv9. Federated extensions and HPC scripts by supercookie.
 
 ---
 
@@ -57,7 +57,7 @@ unzip labels.zip -d labels
 1. **建立/確認輸出目錄**：已於 TWCC HFS建好環境（Singularity），可使用 GPU。`fed_client_weights/`、`global_round_weights/`、`fed_final_weights/`、`fed_val_client/`（供各階段輸出）。
 2. **資料設定**：`data/kitti_client.yaml` 指向 `datasets/kitti/client/`（影像/標註）。
 3. **資源配置**：在 Slurm 腳本中設定節點數、每節點 GPU 數、CPU/記憶體等
-4. **提交訓練**：以 DDP（多節點多 GPU）(fed_client.sb)方式啟動集中式訓練。
+4. **提交訓練**：以 DDP（多節點多 GPU)方式啟動集中式訓練，以 ln01.twcc.ai登入twcc節點後，使用slurm指令 sbatch 派送 fed_client.sb 腳本，即可自動化完成實驗。
 5. **查看結果**：訓練權重（baseline）輸出至 `fed_client_weights/`（或你的 runs 路徑）；使用驗證腳本在 `val` 上測試，輸出至 `fed_val_client/`。
 
 ---
@@ -72,7 +72,7 @@ unzip labels.zip -d labels
 1. **建立/確認輸出目錄**：已於 TWCC HFS建好環境（Singularity），可使用 GPU。`fed_client_weights/`、`global_round_weights/`、`fed_final_weights/`、`fed_val_client/`（供各階段輸出）。
 2. **資料設定**：`data/kitti_client.yaml` 指向 `datasets/kitti/client/`（影像/標註）。
 3. **資源配置**：在 Slurm 腳本中設定節點數、每節點 GPU 數、CPU/記憶體等
-4. **提交訓練**：以 parallel（多節點單GPU平行）(fed_parallel.sb)方式啟動平行訓練。
+4. **提交訓練**：以 parallel（多節點單GPU平行）方式啟動平行訓練，以 ln01.twcc.ai登入twcc節點後，使用slurm指令 sbatch 派送 fed_parallel.sb 腳本，即可自動化完成實驗。
 5. **查看結果**：訓練權重（baseline）輸出至 `fed_client_weights/`（或你的 runs 路徑）；使用驗證腳本在 `val` 上測試，輸出至 `fed_val_client/`。
 
 ---
