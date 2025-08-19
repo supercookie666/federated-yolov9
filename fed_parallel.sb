@@ -33,7 +33,7 @@ for ROUND in $(seq 0 $((NumRounds-1))); do
 
   # 1) 並行 4 個 client（關鍵：每個 srun 後面要有 &）
   for CLIENT in 0 1 2 3; do
-    srun --exclusive -N 1 --ntasks=1 --gpus-per-task=1 --cpus-per-task=4 \
+    srun -N 1 --ntasks=1 --gpus-per-task=1 --cpus-per-task=4 \
          --kill-on-bad-exit=1 \
          singularity exec --nv "$SIF" \
          bash run_client_parallel.sh "${CLIENT}" "${ROUND}" &
@@ -45,7 +45,7 @@ for ROUND in $(seq 0 $((NumRounds-1))); do
 
   # 2) 聚合（只要一次；要不要 GPU 看你的 aggregate 實作）
   echo "→ Aggregating weights for Round ${ROUND}…"
-  srun --exclusive -N 1 --ntasks=1 --gpus-per-task=1 --cpus-per-task=2 \
+  srun -N 1 --ntasks=1 --gpus-per-task=1 --cpus-per-task=2 \
        --kill-on-bad-exit=1 \
        singularity exec --nv "$SIF" \
        bash run_aggregate.sh "${ROUND}"
