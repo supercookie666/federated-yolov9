@@ -11,7 +11,7 @@ EPOCHS=50
 BATCH=16
 WORKERS=4
 
-# cd /home/chander92811/yolov9
+ 
 
 
 #權重參數設定
