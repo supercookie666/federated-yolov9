@@ -34,7 +34,7 @@ def iou_xyxy(box, boxes):
     return inter / union
 
 def voc_ap(rec, prec):
-    # 计算 VOC-style AP（积分法，带精度包络）
+    
     mrec = np.concatenate(([0.0], rec, [1.0]))
     mpre = np.concatenate(([0.0], prec, [0.0]))
     for i in range(mpre.size - 1, 0, -1):
@@ -74,7 +74,7 @@ def load_pred(pred_dir, nc):
             for line in f:
                 q = line.strip().split()
                 if len(q) < 6:  # 需要有 conf
-                    # 某些版本是 5 列（没有 conf），给个很小的 conf 也能评
+                    # 某些版本是 5 列（没有 conf）
                     q += ['0.001']
                 c = int(float(q[0]))
                 if c < 0 or c >= nc: continue
