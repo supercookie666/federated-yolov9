@@ -15,7 +15,7 @@
 #module load singularity
 
 # sif
-SIF=/home/your_account/yolo9t2_ngc2306_20241226.sif
+SIF=/home/your_account/.sif
 SINGULARITY="singularity run --nv $SIF"
 
 # defind master
